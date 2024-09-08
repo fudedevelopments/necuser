@@ -45,7 +45,6 @@ dependencies:
   carousel_slider: ^4.2.1
   dotted_border: ^2.1.0
   file_picker: ^6.2.0
-  cloudinary_public: ^0.23.1
   flutter_rating_bar: ^4.0.1
   photo_view: ^0.15.0
   flutter_bloc: ^8.1.5
