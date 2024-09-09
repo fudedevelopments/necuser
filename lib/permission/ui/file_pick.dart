@@ -46,7 +46,7 @@ class _FilePickerBoxUIState extends State<FilePickerBoxUI> {
       children: [
         Container(
           padding: const EdgeInsets.all(10),
-          height: 150,
+          height: 200,
           decoration: BoxDecoration(
             color: Colors.blue[50],
             border: Border.all(color: Colors.blue, width: 2),
