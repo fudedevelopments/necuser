@@ -7,9 +7,9 @@ sealed class HomeblocState {}
 final class HomeblocInitial extends HomeblocState {}
 
 class HomePageQuerySuccessState extends HomeblocState {
-  final List<Eventmodel> models;
+  final List<EventDetatils> events;
   HomePageQuerySuccessState({
-    required this.models,
+    required this.events,
   });
 }
 

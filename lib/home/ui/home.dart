@@ -5,7 +5,6 @@ import 'package:necuser/common/error_unknown.dart';
 import 'package:necuser/home/bloc/homebloc_bloc.dart';
 import 'package:necuser/home/ui/annoucement_list.dart';
 import 'package:necuser/home/ui/event_list.dart';
-import 'package:necuser/model/event_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool showEvents = true;
 
-  List<Eventmodel> allevents = [];
+
 
   final List<String> bannerImages = [
     'https://m.media-amazon.com/images/S/pv-target-images/3f45cfea260e9fd092200a204f7694477381851324d915bcfc24fd4311a31b19._SX1080_FMjpg_.jpg',
@@ -135,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 20),
               showEvents == true
-                  ? EventListScreen(eventmodels: state.models)
+                  ? EventListScreen(events: state.events)
                   : AnnouncementsPage()
             ]);
           }

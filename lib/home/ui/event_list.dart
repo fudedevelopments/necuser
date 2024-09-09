@@ -1,44 +1,22 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:necuser/common/display_image.dart';
-import 'package:necuser/model/event_model.dart';
+import 'package:necuser/models/EventDetatils.dart';
 import 'package:necuser/utils.dart';
 
-
 class EventListScreen extends StatelessWidget {
-  final List<Eventmodel> eventmodels;
-  EventListScreen({
+  final List<EventDetatils> events;
+  const EventListScreen({
     super.key,
-    required this.eventmodels,
+    required this.events,
   });
-
-   final List<Map<String, String>> announcements = [
-    {
-      'image': 'https://via.placeholder.com/100',
-      'title': 'Announcement 1',
-      'date': '2024-08-15',
-      'details': 'Details about announcement 1',
-    },
-    {
-      'image': 'https://via.placeholder.com/100',
-      'title': 'Announcement 2',
-      'date': '2024-08-16',
-      'details': 'Details about announcement 2',
-    },
-    {
-      'image': 'https://via.placeholder.com/100',
-      'title': 'Announcement 3',
-      'date': '2024-08-17',
-      'details': 'Details about announcement 3',
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(child: ListView.builder(
-      itemCount: eventmodels.length,
+    return Expanded(
+        child: ListView.builder(
+      itemCount: events.length,
       itemBuilder: (context, index) {
-        final event = eventmodels[index];
+        final event = events[index];
         return Container(
           margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           decoration: BoxDecoration(
@@ -58,19 +36,19 @@ class EventListScreen extends StatelessWidget {
           ),
           child: Row(
             children: [
-              ClipRRect(
+              SizedBox(
+                width: 120,
+                height: 120,
+                child: ClipRRect(
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(15),
                     bottomLeft: Radius.circular(15),
                   ),
-                  child: ImageDisplay(imageUrlFuture: getimage(path: event.eventimage[0])),
-                  // Image.network(
-                  //   announcements[0]['image']!,
-                  //   height: 100,
-                  //   width: 100,
-                  //   fit: BoxFit.cover,
-                  // ),
+                  child: ImageDisplay(
+                    imageUrlFuture: getimage(path: event.images![0]),
                   ),
+                ),
+              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -78,7 +56,7 @@ class EventListScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        event.eventname,
+                        event.eventname!,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -92,7 +70,7 @@ class EventListScreen extends StatelessWidget {
                               color: Colors.blueAccent, size: 16),
                           const SizedBox(width: 6),
                           Text(
-                            event.date,
+                            event.date!,
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.black87,
@@ -107,7 +85,7 @@ class EventListScreen extends StatelessWidget {
                               color: Colors.blueAccent, size: 16),
                           const SizedBox(width: 6),
                           Text(
-                            event.eventlocation,
+                            event.location!,
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.black87,

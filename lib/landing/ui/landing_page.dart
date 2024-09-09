@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:necuser/home/ui/home.dart';
 import 'package:necuser/landing/landiing_bloc/landing_page_bloc.dart';
-import 'package:necuser/permission/permission_page.dart';
+import 'package:necuser/permission/ui/permission_page.dart';
 
 List<BottomNavigationBarItem> bottomnavItem = [
   const BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "home"),
