@@ -1,6 +1,4 @@
-
 import 'dart:io';
-
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -35,25 +33,32 @@ pop(BuildContext context) {
   Navigator.pop(context);
 }
 
-List graphqlresponsehandle(
-    {required GraphQLResponse response, required Function function}) {
-  if (response.hasErrors) {
-    String error = response.errors[0].message;
-    return [500, error];
-  } else {
-    return [200, function()];
+List graphqlResponseHandle({
+  required List<GraphQLResponse> response,
+  required Function function,
+}) {
+  for (var res in response) {
+    if (res.hasErrors) {
+      String error = res.errors[0].message;
+      return [500, error];
+    }
   }
+
+  return [200, function()];
 }
 
-handlebloc(
-    {required int statuscode,
-    required VoidCallback success,
-    required VoidCallback failure}) {
+void handlebloc({
+  required int statuscode,
+  required VoidCallback success,
+  required VoidCallback failure,
+  VoidCallback? empty,
+}) {
   if (statuscode == 200) {
     success();
-  }
-  if (statuscode == 500) {
+  } else if (statuscode == 500) {
     failure();
+  } else if (statuscode == 300 && empty != null) {
+    empty();
   }
 }
 
@@ -70,4 +75,3 @@ Future<String> getimage({required String path}) async {
   final urlstr = url.toString();
   return urlstr;
 }
-

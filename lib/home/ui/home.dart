@@ -1,21 +1,24 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:necuser/common/error_unknown.dart';
+import 'package:necuser/common/skelecton_loading_indicator.dart';
 import 'package:necuser/home/bloc/homebloc_bloc.dart';
 import 'package:necuser/home/ui/annoucement_list.dart';
 import 'package:necuser/home/ui/event_list.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final List<String> userattributes;
+  const HomeScreen({
+    super.key,
+    required this.userattributes,
+  });
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   bool showEvents = true;
-
-
 
   final List<String> bannerImages = [
     'https://m.media-amazon.com/images/S/pv-target-images/3f45cfea260e9fd092200a204f7694477381851324d915bcfc24fd4311a31b19._SX1080_FMjpg_.jpg',
@@ -139,12 +142,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ]);
           }
           if (state is HomepagequeryLoadingstate) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          else{
-            return const ErrorUnkown();
+            return const SkeletonLoadingScreen();
+          } else {
+            return const 
+            SkeletonLoadingScreen();
+            
           }
         },
       ),

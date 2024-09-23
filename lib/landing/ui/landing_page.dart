@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:necuser/home/ui/home.dart';
 import 'package:necuser/landing/landiing_bloc/landing_page_bloc.dart';
+import 'package:necuser/landing/userattributesbloc/userattributes_bloc.dart';
 import 'package:necuser/permission/ui/permission_page.dart';
 
 List<BottomNavigationBarItem> bottomnavItem = [
@@ -15,21 +16,25 @@ List<BottomNavigationBarItem> bottomnavItem = [
       icon: Icon(Icons.person_2_outlined), label: "Profile"),
 ];
 
-List<Widget> bottomnaviScreen = [
-  const HomeScreen(),
-  const PermissionsPage(),
-  const Text("Index : Academic calender"),
-  const Text("Index : profile"),
-];
-
-class LandingPage extends StatelessWidget {
+class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
+
+  @override
+  State<LandingPage> createState() => _LandingPageState();
+}
+
+class _LandingPageState extends State<LandingPage> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<UserattributesBloc>(context).add(GetUserAttributesEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<LandingPageBloc, LandingPageState>(
       listener: (context, state) {},
-      builder: (context, state) {
+      builder: (context, landingstate) {
         return Scaffold(
           extendBodyBehindAppBar: true,
           appBar: PreferredSize(
@@ -70,12 +75,28 @@ class LandingPage extends StatelessWidget {
               ),
             ),
           ),
-          body: Center(
-            child: bottomnaviScreen.elementAt(state.tabindex),
+          body: BlocBuilder<UserattributesBloc, UserattributesState>(
+            builder: (context, state) {
+              if (state is GetUserAttributesSuccessState) {
+                List<Widget> bottomnaviScreen = [
+                   HomeScreen(userattributes: state.attributes,),
+                   PermissionsPage(userattributes: state.attributes,),
+                  const Text("Index : Academic calender"),
+                  const Text("Index : profile"),
+                ];
+                return Center(
+                  child: bottomnaviScreen.elementAt(landingstate.tabindex),
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
           ),
           bottomNavigationBar: BottomNavigationBar(
             items: bottomnavItem,
-            currentIndex: state.tabindex,
+            currentIndex: landingstate.tabindex,
             selectedItemColor: Theme.of(context).colorScheme.primary,
             unselectedItemColor: Colors.grey,
             onTap: (index) {

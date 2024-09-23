@@ -1,9 +1,22 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:necuser/permission/ui/file_pick.dart'; 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:necuser/landing/ui/landing_page.dart';
+
+import 'package:necuser/models/ModelProvider.dart';
+import 'package:necuser/permission/bloc/permisson_bloc.dart';
+import 'package:necuser/permission/ui/file_pick.dart';
+import 'package:necuser/utils.dart';
 
 class ElegantForm extends StatefulWidget {
-  const ElegantForm({super.key});
+  final Student student;
+  const ElegantForm({
+    super.key,
+    required this.student,
+  });
 
   @override
   // ignore: library_private_types_in_public_api
@@ -18,9 +31,11 @@ class _ElegantFormState extends State<ElegantForm>
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _registerUrlController = TextEditingController();
-
+  final TextEditingController _descriptionController = TextEditingController();
   late AnimationController _animationController;
   late Animation<double> _animation;
+
+  List<File> selectedFiles = [];
 
   @override
   void dispose() {
@@ -31,6 +46,7 @@ class _ElegantFormState extends State<ElegantForm>
     _locationController.dispose();
     _registerUrlController.dispose();
     _animationController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -44,25 +60,25 @@ class _ElegantFormState extends State<ElegantForm>
     fetchCurrentUserAttributes();
   }
 
-  Future<void> fetchCurrentUserAttributes() async {
-    try {
-      final result = await Amplify.Auth.fetchUserAttributes();
-      result;
-      for (final element in result) {
-        if (element.userAttributeKey.toString() == "email") {
-          setState(() {
-            _emailController.text = element.value;
-          });
-        } else if (element.userAttributeKey.toString() == "sub") {
-          setState(() {
-            _studentNameController.text = element.value;
-          });
-        }
-      }
+  fetchCurrentUserAttributes() async {
+    setState(() {
+      _emailController.text = widget.student.studentname!;
+      _studentNameController.text = widget.student.email!;
+    });
+    _animationController.forward();
+  }
 
-      _animationController.forward();
-    } on AuthException catch (e) {
-      safePrint('Error fetching user attributes: ${e.message}');
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      setState(() {
+        _dateController.text = "${picked.toLocal()}".split(' ')[0];
+      });
     }
   }
 
@@ -70,7 +86,7 @@ class _ElegantFormState extends State<ElegantForm>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Event Registration'),
+        title: const Text('Make a Request'),
         backgroundColor: Colors.blueAccent,
       ),
       body: SingleChildScrollView(
@@ -85,7 +101,6 @@ class _ElegantFormState extends State<ElegantForm>
           ),
           child: Column(
             children: [
-              // Apply animation
               FadeTransition(
                 opacity: _animation,
                 child: _buildTextField('Student Name', _studentNameController,
@@ -98,15 +113,20 @@ class _ElegantFormState extends State<ElegantForm>
                     isReadOnly: true),
               ),
               const SizedBox(height: 16),
-              _buildTextField('Event Name', _eventNameController),
+              _buildTextField('Requst name', _eventNameController),
               const SizedBox(height: 16),
-              _buildTextField('Date', _dateController),
+              _buildTextField('Description', _descriptionController,
+                  maxLines: 6),
+              const SizedBox(height: 16),
+              _buildDateField('Date', _dateController),
               const SizedBox(height: 16),
               _buildTextField('Location', _locationController),
               const SizedBox(height: 16),
               _buildTextField('Register URL', _registerUrlController),
               const SizedBox(height: 24),
-              const FilePickerBoxUI(),
+              FilePickerBoxUI(
+                selectfiles: selectedFiles,
+              ),
               const SizedBox(height: 24),
               _buildGradientButton('Submit'),
               const SizedBox(height: 20),
@@ -118,10 +138,12 @@ class _ElegantFormState extends State<ElegantForm>
   }
 
   Widget _buildTextField(String label, TextEditingController controller,
-      {bool isReadOnly = false}) {
+      {bool isReadOnly = false, int? maxLines}) {
     return TextField(
       controller: controller,
       readOnly: isReadOnly,
+      minLines: maxLines != null ? 4 : null,
+      maxLines: maxLines,
       decoration: InputDecoration(
         labelText: label,
         filled: true,
@@ -133,6 +155,17 @@ class _ElegantFormState extends State<ElegantForm>
           borderSide: BorderSide.none,
         ),
         labelStyle: const TextStyle(color: Colors.black54),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      ),
+    );
+  }
+
+  Widget _buildDateField(String label, TextEditingController controller) {
+    return GestureDetector(
+      onTap: () => _selectDate(context),
+      child: AbsorbPointer(
+        child: _buildTextField(label, controller, isReadOnly: false),
       ),
     );
   }
@@ -148,20 +181,49 @@ class _ElegantFormState extends State<ElegantForm>
         ),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: ElevatedButton(
-        onPressed: () {
-          
+      child: BlocConsumer<PermissonBloc, PermissonState>(
+        listener: (context, state) {
+          if (state is AddondutyRequestSuccessState) {
+            showsnakbar(context, "Successfully created Onduty");
+            navigatorpushandremove(context, const LandingPage());
+          }
         },
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(
-              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-        ),
+        builder: (context, state) {
+          if (state is AddondutyRequestLoadingState) {
+            return const Center(
+              child: SpinKitCircle(
+                color: Colors.white,
+                size: 50.0,
+              ),
+            );
+          } else {
+            return ElevatedButton(
+              onPressed: () {
+                BlocProvider.of<PermissonBloc>(context).add(
+                    AddondutyRequestEvent(
+                        student: widget.student,
+                        requestName: _studentNameController.text,
+                        description: _dateController.text,
+                        date: _dateController.text,
+                        location: _locationController.text,
+                        registerurl: _registerUrlController.text,
+                        documents: selectedFiles));
+              },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+              ),
+              child: Text(
+                text,
+                style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+            );
+          }
+        },
       ),
     );
   }

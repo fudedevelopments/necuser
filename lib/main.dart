@@ -9,7 +9,9 @@ import 'package:necuser/amplify_outputs.dart';
 import 'package:necuser/home/bloc/homebloc_bloc.dart';
 import 'package:necuser/landing/landiing_bloc/landing_page_bloc.dart';
 import 'package:necuser/landing/ui/landing_page.dart';
+import 'package:necuser/landing/userattributesbloc/userattributes_bloc.dart';
 import 'package:necuser/models/ModelProvider.dart';
+import 'package:necuser/permission/bloc/permisson_bloc.dart';
 
 Future<void> _configureAmplify() async {
   try {
@@ -35,6 +37,12 @@ Future<void> main() async {
       BlocProvider(
         create: (context) => HomeblocBloc(),
       ),
+      BlocProvider(
+        create: (context) => UserattributesBloc(),
+      ),
+       BlocProvider(
+        create: (context) => PermissonBloc(),
+      ),
     ],
     child: const MyApp(),
   ));
@@ -46,7 +54,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Authenticator(
       child: MaterialApp(
-          builder: Authenticator.builder(), home: const LandingPage()),
+          debugShowCheckedModeBanner: false,
+          builder: Authenticator.builder(),
+          home: const LandingPage()),
     );
   }
 }

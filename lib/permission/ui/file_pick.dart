@@ -1,9 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+
 class FilePickerBoxUI extends StatefulWidget {
-  const FilePickerBoxUI({super.key});
+  final List<File> selectfiles;
+  const FilePickerBoxUI({
+    super.key,
+    required this.selectfiles,
+  });
 
   @override
   // ignore: library_private_types_in_public_api
@@ -11,7 +17,7 @@ class FilePickerBoxUI extends StatefulWidget {
 }
 
 class _FilePickerBoxUIState extends State<FilePickerBoxUI> {
-  List<File> _selectedFiles = [];
+
 
   Future<void> _pickFiles() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -22,14 +28,14 @@ class _FilePickerBoxUIState extends State<FilePickerBoxUI> {
 
     if (result != null) {
       setState(() {
-        _selectedFiles.addAll(result.paths.map((path) => File(path!)).toList());
+        widget.selectfiles.addAll(result.paths.map((path) => File(path!)).toList());
       });
     }
   }
 
   void _removeFile(int index) {
     setState(() {
-      _selectedFiles.removeAt(index);
+      widget.selectfiles.removeAt(index);
     });
   }
 
@@ -55,7 +61,7 @@ class _FilePickerBoxUIState extends State<FilePickerBoxUI> {
           child: Column(
             children: [
               Expanded(
-                child: _selectedFiles.isEmpty
+                child: widget.selectfiles.isEmpty
                     ? GestureDetector(
                         onTap: _pickFiles,
                         child: const Column(
@@ -73,7 +79,7 @@ class _FilePickerBoxUIState extends State<FilePickerBoxUI> {
                               ),
                             ),
                             SizedBox(height: 5),
-                             Text(
+                            Text(
                               "Supported documents: PNG, JPG , PDF, DOC",
                               style: TextStyle(
                                 fontSize: 10,
@@ -85,9 +91,9 @@ class _FilePickerBoxUIState extends State<FilePickerBoxUI> {
                         ),
                       )
                     : ListView.builder(
-                        itemCount: _selectedFiles.length,
+                        itemCount: widget.selectfiles.length,
                         itemBuilder: (context, index) {
-                          File file = _selectedFiles[index];
+                          File file = widget.selectfiles[index];
                           String fileName = file.path.split('/').last;
                           String shortenedFileName = _shortenFileName(fileName);
                           return Row(
@@ -124,7 +130,7 @@ class _FilePickerBoxUIState extends State<FilePickerBoxUI> {
                         },
                       ),
               ),
-              if (_selectedFiles.isNotEmpty)
+              if (widget.selectfiles.isNotEmpty)
                 Align(
                   alignment: Alignment.centerRight,
                   child: IconButton(
