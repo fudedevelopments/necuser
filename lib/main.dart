@@ -11,7 +11,9 @@ import 'package:necuser/landing/landiing_bloc/landing_page_bloc.dart';
 import 'package:necuser/landing/ui/landing_page.dart';
 import 'package:necuser/landing/userattributesbloc/userattributes_bloc.dart';
 import 'package:necuser/models/ModelProvider.dart';
-import 'package:necuser/permission/bloc/permisson_bloc.dart';
+import 'package:necuser/permission/bloc/getpermissions_bloc.dart';
+import 'package:necuser/permission/permissionbloc/permisson_bloc.dart';
+import 'package:necuser/userdetials/bloc/userdetails_bloc.dart';
 
 Future<void> _configureAmplify() async {
   try {
@@ -42,6 +44,12 @@ Future<void> main() async {
       ),
        BlocProvider(
         create: (context) => PermissonBloc(),
+      ),
+      BlocProvider(
+        create: (context) => UserdetailsBloc(),
+      ),
+      BlocProvider(
+        create: (context) => GetpermissionsBloc(),
       ),
     ],
     child: const MyApp(),

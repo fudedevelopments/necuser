@@ -12,6 +12,8 @@ class AddondutyRequestEvent extends PermissonEvent {
   final String location;
   final String registerurl;
   final List<File> documents;
+  final ClassRoom classRoom;
+  final Proctor proctor;
 
   AddondutyRequestEvent({
     required this.student,
@@ -21,12 +23,14 @@ class AddondutyRequestEvent extends PermissonEvent {
     required this.location,
     required this.registerurl,
     required this.documents,
+    required this.classRoom,
+    required this.proctor,
   });
 }
 
 class GetStudentUsingAttributes extends PermissonEvent {
-  final String email;
+  final Student student;
   GetStudentUsingAttributes({
-    required this.email,
+    required this.student,
   });
 }

@@ -1,7 +1,10 @@
+import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:necuser/models/Student.dart';
+import 'package:necuser/utils.dart';
 
-Future<List<String>> fetchUserAttributes() async {
-  try {
+ fetchUserAttributes() async {
+
     final result = await Amplify.Auth.fetchUserAttributes();
 
     String name = '';
@@ -14,9 +17,25 @@ Future<List<String>> fetchUserAttributes() async {
         email = element.value;
       }
     }
-    return [name, email];
-  } catch (e) {
-    safePrint(e.toString());
-    return ['', ''];
-  }
+    if (name != '' && email != '') {
+    final studentRequest = ModelQueries.list<Student>(
+    Student.classType,
+    where: Student.EMAIL.eq(email),
+  );
+  final studentResponse =
+      await Amplify.API.query(request: studentRequest).response;
+
+  List res = graphqlResponseHandle(
+      response: [studentResponse],
+      function: () {
+        Student? studentdata;
+        final student = studentResponse.data?.items.first;
+        if (student != null) {
+          studentdata = student;
+        }
+        return studentdata;
+      });
+    return res;
+    }
+    
 }

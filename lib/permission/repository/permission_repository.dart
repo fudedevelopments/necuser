@@ -6,14 +6,17 @@ import 'package:aws_common/vm.dart';
 import 'package:necuser/models/ModelProvider.dart';
 import 'package:necuser/utils.dart';
 
-addondutyRequestFunction(
-    {required Student student,
-    required String requestname,
-    required String description,
-    required String date,
-    required String location,
-    required String registerurl,
-    required List<File> documents}) async {
+addondutyRequestFunction({
+  required Student student,
+  required String requestname,
+  required String description,
+  required String date,
+  required String location,
+  required String registerurl,
+  required List<File> documents,
+  required ClassRoom classRoom,
+  required Proctor proctor,
+}) async {
   List<String> documentsresult = await uploadFile(documents);
   final ondutyrequest = Ondutyrequest(
       student: student,
@@ -22,7 +25,9 @@ addondutyRequestFunction(
       date: date,
       location: location,
       registerUrl: registerurl,
-      documets: documentsresult);
+      documets: documentsresult,
+      proctor: proctor,
+      classRoom: classRoom);
   final request = ModelMutations.create(ondutyrequest);
   final response = await Amplify.API.mutate(request: request).response;
   List res = graphqlResponseHandle(
@@ -45,33 +50,57 @@ uploadFile(List<File> documents) async {
   return imageslist;
 }
 
-getStudentUsingAttributeFunction(String email) async {
-  Student? studentdata;
-  List<Ondutyrequest> ondutydata = [];
-  final studentRequest = ModelQueries.list<Student>(
-    Student.classType,
-    where: Student.EMAIL.eq(email),
+getStudentOndutyFunction(Student student) async {
+  final ondutyRequest = ModelQueries.list<Ondutyrequest>(
+    Ondutyrequest.classType,
+    where: Ondutyrequest.STUDENT.eq(student.id),
   );
-  final studentResponse =
-      await Amplify.API.query(request: studentRequest).response;
-  final student = studentResponse.data?.items.first;
-  if (student != null) {
-    studentdata = student;
-    final ondutyRequest = ModelQueries.list<Ondutyrequest>(
-      Ondutyrequest.classType,
-      where: Ondutyrequest.STUDENT.eq(studentdata.id),
-    );
-    final ondutyResponse =
-        await Amplify.API.query(request: ondutyRequest).response;
-    final ondutyList = ondutyResponse.data?.items ?? [];
-    for (int i = 0; i < ondutyList.length; i++) {
-      ondutydata.add(ondutyList[i]!);
-    }
-  }
+  final ondutyResponse =
+      await Amplify.API.query(request: ondutyRequest).response;
   List res = graphqlResponseHandle(
-      response: [studentResponse],
+      response: [ondutyResponse],
       function: () {
-        return [studentdata, ondutydata];
+        List<Ondutyrequest> ondutydata = [];
+        final ondutyList = ondutyResponse.data?.items;
+        if (ondutyList != null) {
+          for (int i = 0; i < ondutyList.length; i++) {
+            ondutydata.add(ondutyList[i]!);
+          }
+        }
+        return ondutydata;
       });
   return res;
 }
+
+deleteOnDutyRequestFunction(Ondutyrequest ondutyRequest) async {
+  final request = ModelMutations.delete(ondutyRequest);
+  final bool removefile = await removefiles(ondutyRequest.documets!);
+  if (removefile == false) {
+    return [500, null];
+  }
+  else{
+    final response = await Amplify.API.mutate(request: request).response;
+    List res = graphqlResponseHandle(
+        response: [response],
+        function: () {
+          return null;
+        });
+    return res;
+  }
+}
+
+removefiles(List<String> filelist) async {
+  try {
+    final List<StoragePath> paths =
+        filelist.map((file) => StoragePath.fromString(file)).toList();
+    // ignore: unused_local_variable
+    final result = await Amplify.Storage.removeMany(
+      paths: paths,
+    ).result;
+    return true;
+  } on StorageException catch (e) {
+    safePrint(e.message);
+    return false;
+  }
+}
+

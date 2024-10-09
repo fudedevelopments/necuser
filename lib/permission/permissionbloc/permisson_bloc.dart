@@ -26,7 +26,11 @@ class PermissonBloc extends Bloc<PermissonEvent, PermissonState> {
         date: event.date,
         location: event.location,
         registerurl: event.registerurl,
-        documents: event.documents);
+        documents: event.documents,
+        proctor: event.proctor,
+        classRoom: event.classRoom
+        
+        );
     handlebloc(
         statuscode: res[0],
         success: () {
@@ -39,14 +43,13 @@ class PermissonBloc extends Bloc<PermissonEvent, PermissonState> {
 
   FutureOr<void> getStudentUsingAttributes(
       GetStudentUsingAttributes event, Emitter<PermissonState> emit) async {
-    GetStudentUsingAttributesLoadingState();
-    List res = await getStudentUsingAttributeFunction(event.email);
+    emit(GetStudentUsingAttributesLoadingState());
+    List res = await getStudentOndutyFunction(event.student);
     handlebloc(
         statuscode: res[0],
         success: () {
           emit(GetStudentUsingAttributesSuccessState(
-            student: res[1][0],
-            ondutylist: res[1][1]
+            ondutylist: res[1]
             ));
         },
         failure: () {

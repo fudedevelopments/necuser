@@ -41,6 +41,8 @@ class Ondutyrequest extends amplify_core.Model {
   final Status? _hodApproval;
   final String? _hodComments;
   final Student? _student;
+  final ClassRoom? _classRoom;
+  final Proctor? _proctor;
   final amplify_core.TemporalDateTime? _createdAt;
   final amplify_core.TemporalDateTime? _updatedAt;
 
@@ -109,6 +111,14 @@ class Ondutyrequest extends amplify_core.Model {
     return _student;
   }
   
+  ClassRoom? get classRoom {
+    return _classRoom;
+  }
+  
+  Proctor? get proctor {
+    return _proctor;
+  }
+  
   amplify_core.TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -117,9 +127,9 @@ class Ondutyrequest extends amplify_core.Model {
     return _updatedAt;
   }
   
-  const Ondutyrequest._internal({required this.id, ondutyname, description, date, location, registerUrl, documets, proctorApproval, proctorComments, acApproval, acComments, hodApproval, hodComments, student, createdAt, updatedAt}): _ondutyname = ondutyname, _description = description, _date = date, _location = location, _registerUrl = registerUrl, _documets = documets, _proctorApproval = proctorApproval, _proctorComments = proctorComments, _acApproval = acApproval, _acComments = acComments, _hodApproval = hodApproval, _hodComments = hodComments, _student = student, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Ondutyrequest._internal({required this.id, ondutyname, description, date, location, registerUrl, documets, proctorApproval, proctorComments, acApproval, acComments, hodApproval, hodComments, student, classRoom, proctor, createdAt, updatedAt}): _ondutyname = ondutyname, _description = description, _date = date, _location = location, _registerUrl = registerUrl, _documets = documets, _proctorApproval = proctorApproval, _proctorComments = proctorComments, _acApproval = acApproval, _acComments = acComments, _hodApproval = hodApproval, _hodComments = hodComments, _student = student, _classRoom = classRoom, _proctor = proctor, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Ondutyrequest({String? id, String? ondutyname, String? description, String? date, String? location, String? registerUrl, List<String>? documets, Status? proctorApproval, String? proctorComments, Status? acApproval, String? acComments, Status? hodApproval, String? hodComments, Student? student}) {
+  factory Ondutyrequest({String? id, String? ondutyname, String? description, String? date, String? location, String? registerUrl, List<String>? documets, Status? proctorApproval, String? proctorComments, Status? acApproval, String? acComments, Status? hodApproval, String? hodComments, Student? student, ClassRoom? classRoom, Proctor? proctor}) {
     return Ondutyrequest._internal(
       id: id == null ? amplify_core.UUID.getUUID() : id,
       ondutyname: ondutyname,
@@ -134,7 +144,9 @@ class Ondutyrequest extends amplify_core.Model {
       acComments: acComments,
       hodApproval: hodApproval,
       hodComments: hodComments,
-      student: student);
+      student: student,
+      classRoom: classRoom,
+      proctor: proctor);
   }
   
   bool equals(Object other) {
@@ -158,7 +170,9 @@ class Ondutyrequest extends amplify_core.Model {
       _acComments == other._acComments &&
       _hodApproval == other._hodApproval &&
       _hodComments == other._hodComments &&
-      _student == other._student;
+      _student == other._student &&
+      _classRoom == other._classRoom &&
+      _proctor == other._proctor;
   }
   
   @override
@@ -183,6 +197,8 @@ class Ondutyrequest extends amplify_core.Model {
     buffer.write("hodApproval=" + (_hodApproval != null ? amplify_core.enumToString(_hodApproval)! : "null") + ", ");
     buffer.write("hodComments=" + "$_hodComments" + ", ");
     buffer.write("student=" + (_student != null ? _student!.toString() : "null") + ", ");
+    buffer.write("classRoom=" + (_classRoom != null ? _classRoom!.toString() : "null") + ", ");
+    buffer.write("proctor=" + (_proctor != null ? _proctor!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -190,7 +206,7 @@ class Ondutyrequest extends amplify_core.Model {
     return buffer.toString();
   }
   
-  Ondutyrequest copyWith({String? ondutyname, String? description, String? date, String? location, String? registerUrl, List<String>? documets, Status? proctorApproval, String? proctorComments, Status? acApproval, String? acComments, Status? hodApproval, String? hodComments, Student? student}) {
+  Ondutyrequest copyWith({String? ondutyname, String? description, String? date, String? location, String? registerUrl, List<String>? documets, Status? proctorApproval, String? proctorComments, Status? acApproval, String? acComments, Status? hodApproval, String? hodComments, Student? student, ClassRoom? classRoom, Proctor? proctor}) {
     return Ondutyrequest._internal(
       id: id,
       ondutyname: ondutyname ?? this.ondutyname,
@@ -205,7 +221,9 @@ class Ondutyrequest extends amplify_core.Model {
       acComments: acComments ?? this.acComments,
       hodApproval: hodApproval ?? this.hodApproval,
       hodComments: hodComments ?? this.hodComments,
-      student: student ?? this.student);
+      student: student ?? this.student,
+      classRoom: classRoom ?? this.classRoom,
+      proctor: proctor ?? this.proctor);
   }
   
   Ondutyrequest copyWithModelFieldValues({
@@ -221,7 +239,9 @@ class Ondutyrequest extends amplify_core.Model {
     ModelFieldValue<String?>? acComments,
     ModelFieldValue<Status?>? hodApproval,
     ModelFieldValue<String?>? hodComments,
-    ModelFieldValue<Student?>? student
+    ModelFieldValue<Student?>? student,
+    ModelFieldValue<ClassRoom?>? classRoom,
+    ModelFieldValue<Proctor?>? proctor
   }) {
     return Ondutyrequest._internal(
       id: id,
@@ -237,7 +257,9 @@ class Ondutyrequest extends amplify_core.Model {
       acComments: acComments == null ? this.acComments : acComments.value,
       hodApproval: hodApproval == null ? this.hodApproval : hodApproval.value,
       hodComments: hodComments == null ? this.hodComments : hodComments.value,
-      student: student == null ? this.student : student.value
+      student: student == null ? this.student : student.value,
+      classRoom: classRoom == null ? this.classRoom : classRoom.value,
+      proctor: proctor == null ? this.proctor : proctor.value
     );
   }
   
@@ -260,11 +282,21 @@ class Ondutyrequest extends amplify_core.Model {
           ? Student.fromJson(new Map<String, dynamic>.from(json['student']['serializedData']))
           : Student.fromJson(new Map<String, dynamic>.from(json['student']))
         : null,
+      _classRoom = json['classRoom'] != null
+        ? json['classRoom']['serializedData'] != null
+          ? ClassRoom.fromJson(new Map<String, dynamic>.from(json['classRoom']['serializedData']))
+          : ClassRoom.fromJson(new Map<String, dynamic>.from(json['classRoom']))
+        : null,
+      _proctor = json['proctor'] != null
+        ? json['proctor']['serializedData'] != null
+          ? Proctor.fromJson(new Map<String, dynamic>.from(json['proctor']['serializedData']))
+          : Proctor.fromJson(new Map<String, dynamic>.from(json['proctor']))
+        : null,
       _createdAt = json['createdAt'] != null ? amplify_core.TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? amplify_core.TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'ondutyname': _ondutyname, 'description': _description, 'date': _date, 'location': _location, 'registerUrl': _registerUrl, 'documets': _documets, 'proctorApproval': amplify_core.enumToString(_proctorApproval), 'proctorComments': _proctorComments, 'acApproval': amplify_core.enumToString(_acApproval), 'acComments': _acComments, 'hodApproval': amplify_core.enumToString(_hodApproval), 'hodComments': _hodComments, 'student': _student?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'ondutyname': _ondutyname, 'description': _description, 'date': _date, 'location': _location, 'registerUrl': _registerUrl, 'documets': _documets, 'proctorApproval': amplify_core.enumToString(_proctorApproval), 'proctorComments': _proctorComments, 'acApproval': amplify_core.enumToString(_acApproval), 'acComments': _acComments, 'hodApproval': amplify_core.enumToString(_hodApproval), 'hodComments': _hodComments, 'student': _student?.toJson(), 'classRoom': _classRoom?.toJson(), 'proctor': _proctor?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
@@ -282,6 +314,8 @@ class Ondutyrequest extends amplify_core.Model {
     'hodApproval': _hodApproval,
     'hodComments': _hodComments,
     'student': _student,
+    'classRoom': _classRoom,
+    'proctor': _proctor,
     'createdAt': _createdAt,
     'updatedAt': _updatedAt
   };
@@ -303,6 +337,12 @@ class Ondutyrequest extends amplify_core.Model {
   static final STUDENT = amplify_core.QueryField(
     fieldName: "student",
     fieldType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.model, ofModelName: 'Student'));
+  static final CLASSROOM = amplify_core.QueryField(
+    fieldName: "classRoom",
+    fieldType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.model, ofModelName: 'ClassRoom'));
+  static final PROCTOR = amplify_core.QueryField(
+    fieldName: "proctor",
+    fieldType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.model, ofModelName: 'Proctor'));
   static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Ondutyrequest";
     modelSchemaDefinition.pluralName = "Ondutyrequests";
@@ -401,6 +441,20 @@ class Ondutyrequest extends amplify_core.Model {
       isRequired: false,
       targetNames: ['studentid'],
       ofModelName: 'Student'
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.belongsTo(
+      key: Ondutyrequest.CLASSROOM,
+      isRequired: false,
+      targetNames: ['classRoomid'],
+      ofModelName: 'ClassRoom'
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.belongsTo(
+      key: Ondutyrequest.PROCTOR,
+      isRequired: false,
+      targetNames: ['proctorid'],
+      ofModelName: 'Proctor'
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.nonQueryField(

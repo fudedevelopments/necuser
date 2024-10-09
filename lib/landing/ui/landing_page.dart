@@ -1,10 +1,12 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:necuser/common/error_message_screen.dart';
 import 'package:necuser/home/ui/home.dart';
 import 'package:necuser/landing/landiing_bloc/landing_page_bloc.dart';
 import 'package:necuser/landing/userattributesbloc/userattributes_bloc.dart';
 import 'package:necuser/permission/ui/permission_page.dart';
+import 'package:necuser/userdetials/ui/user_details.dart';
 
 List<BottomNavigationBarItem> bottomnavItem = [
   const BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "home"),
@@ -79,17 +81,27 @@ class _LandingPageState extends State<LandingPage> {
             builder: (context, state) {
               if (state is GetUserAttributesSuccessState) {
                 List<Widget> bottomnaviScreen = [
-                   HomeScreen(userattributes: state.attributes,),
-                   PermissionsPage(userattributes: state.attributes,),
+                  HomeScreen(
+                    student: state.student,
+                  ),
+                  PermissionsPage(
+                    student: state.student,
+                  ),
                   const Text("Index : Academic calender"),
-                  const Text("Index : profile"),
+                  UserDetailsPage(
+                    student: state.student,
+                  )
                 ];
                 return Center(
                   child: bottomnaviScreen.elementAt(landingstate.tabindex),
                 );
+              }
+              if (state is GetUserAttributesFailureState) {
+                return const GradientErrorScreen(message1: "No Student Record Found", message2: "Please Contact the higher Authority");
               } else {
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child:
+                   CircularProgressIndicator(),
                 );
               }
             },

@@ -7,9 +7,9 @@ sealed class UserattributesState {}
 final class UserattributesInitial extends UserattributesState {}
 
 class GetUserAttributesSuccessState extends UserattributesState {
-  final List<String> attributes;
+  final Student student;
   GetUserAttributesSuccessState({
-    required this.attributes,
+    required this.student,
   });
 }
 

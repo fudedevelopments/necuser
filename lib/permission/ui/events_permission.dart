@@ -7,7 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:necuser/landing/ui/landing_page.dart';
 
 import 'package:necuser/models/ModelProvider.dart';
-import 'package:necuser/permission/bloc/permisson_bloc.dart';
+import 'package:necuser/permission/permissionbloc/permisson_bloc.dart';
 import 'package:necuser/permission/ui/file_pick.dart';
 import 'package:necuser/utils.dart';
 
@@ -202,12 +202,15 @@ class _ElegantFormState extends State<ElegantForm>
                 BlocProvider.of<PermissonBloc>(context).add(
                     AddondutyRequestEvent(
                         student: widget.student,
-                        requestName: _studentNameController.text,
+                        requestName: _eventNameController.text,
                         description: _dateController.text,
                         date: _dateController.text,
                         location: _locationController.text,
                         registerurl: _registerUrlController.text,
-                        documents: selectedFiles));
+                        documents: selectedFiles,
+                        classRoom: widget.student.classRoom!,
+                        proctor: widget.student.proctor!
+                        ));
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),

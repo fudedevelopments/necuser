@@ -7,10 +7,8 @@ sealed class PermissonState {}
 final class PermissonInitial extends PermissonState {}
 
 class GetStudentUsingAttributesSuccessState extends PermissonState {
-  final Student student;
   final List<Ondutyrequest> ondutylist;
   GetStudentUsingAttributesSuccessState({
-    required this.student,
     required this.ondutylist,
   });
 }

@@ -2,16 +2,18 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:necuser/common/skelecton_loading_indicator.dart';
 import 'package:necuser/home/bloc/homebloc_bloc.dart';
 import 'package:necuser/home/ui/annoucement_list.dart';
 import 'package:necuser/home/ui/event_list.dart';
+import 'package:necuser/models/ModelProvider.dart';
 
 class HomeScreen extends StatefulWidget {
-  final List<String> userattributes;
+  final Student student;
   const HomeScreen({
     super.key,
-    required this.userattributes,
+    required this.student,
   });
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -144,9 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state is HomepagequeryLoadingstate) {
             return const SkeletonLoadingScreen();
           } else {
-            return const 
-            SkeletonLoadingScreen();
-            
+            return const SkeletonLoadingScreen();
           }
         },
       ),
